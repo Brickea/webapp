@@ -7,6 +7,7 @@
 - [Build and Deploy instructions](#build-and-deploy-instructions)
   - [Use maven clean install](#use-maven-clean-install)
   - [Start tomcat server](#start-tomcat-server)
+  - [Mysql](#mysql)
 
 Zixiao Wang  
 CSYE 6225
@@ -78,9 +79,37 @@ cd target
 
 # Then use following command to start the web service
 java -jar webapp-0.0.1-SNAPSHOT.jar
+# Then open your browser and input "localhost:8080"
+# Your shall see the "Hello World!"
+
+# And there is a production env
+java -jar webapp-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+# Then open your browser and input "localhost:4431"
+# Your shall see the "Hello World!"
+
 
 ```
 
-Then open your browser and input "localhost:8080"
 
-Your shall see the "Hello World!"
+### Mysql
+
+```shell script
+sudo apt install mysql
+```
+
+You should also create following db and tables.
+
+```sql
+CREATE SCHEMA `webapp` ;
+
+CREATE TABLE `webapp`.`User` (
+  `id` INT NOT NULL,
+  `emailAddress` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `firstName` VARCHAR(45) NOT NULL,
+  `lastName` VARCHAR(45) NOT NULL,
+  `accountCreated` VARCHAR(45) NOT NULL,
+  `accountUpdated` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `emailAddress_UNIQUE` (`emailAddress` ASC));
+```
