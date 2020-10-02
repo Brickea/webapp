@@ -21,15 +21,7 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: '11'
-    - name: Install all dependencies with Maven
-      env:
-          DEFAULT_BRANCH: mvn-workflow
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: mvn clean install
-    - name: Test all Unit tests
-      env:
-          DEFAULT_BRANCH: mvn-workflow
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: mvn test
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
 
       
