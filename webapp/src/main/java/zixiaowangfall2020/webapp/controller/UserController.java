@@ -117,6 +117,9 @@ public class UserController {
             //searching follows token->user
             user = tokenService.getUserFromToken(token);
             User currentUser = userService.getByUserName(user.getUsername());
+            if(currentUser==null){
+                return new ResponseEntity<Map<String,Object>>(map,HttpStatus.BAD_REQUEST);
+            }
 
             currentUser.setUserName(newUser.getUserName());
             currentUser.setPassword(newUser.getPassword());
