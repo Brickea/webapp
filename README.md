@@ -112,4 +112,8 @@ CREATE TABLE `webapp`.`User` (
   `accountUpdated` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `emailAddress_UNIQUE` (`emailAddress` ASC));
+<<<<<<< HEAD
 ```
+=======
+```
+>>>>>>> a3c048a3bd0aae2903972241368abc9e6fa4c400
