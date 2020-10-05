@@ -1,13 +1,18 @@
 # Webapp<!-- omit in toc -->
-
-- [Prerequisites for building and deploying](#prerequisites-for-building-and-deploying)
-  - [You should have JDK with 8+](#you-should-have-jdk-with-8)
-  - [You will nedd Maven in order to complie the project](#you-will-nedd-maven-in-order-to-complie-the-project)
-  - [The project starts from Spring init(You don't need to do this step)](#the-project-starts-from-spring-inityou-dont-need-to-do-this-step)
-- [Build and Deploy instructions](#build-and-deploy-instructions)
-  - [Use maven clean install](#use-maven-clean-install)
-  - [Start tomcat server](#start-tomcat-server)
+oi change during code review
+- [<<<<<<< HEAD](#-head)
+  - [Prerequisites for building and deploying](#prerequisites-for-building-and-deploying)
+    - [You should have JDK with 8+](#you-should-have-jdk-with-8)
+    - [You will nedd Maven in order to complie the project](#you-will-nedd-maven-in-order-to-complie-the-project)
+    - [The project starts from Spring init(You don't need to do this step)](#the-project-starts-from-spring-inityou-dont-need-to-do-this-step)
+  - [Build and Deploy instructions](#build-and-deploy-instructions)
+    - [Use maven clean install](#use-maven-clean-install)
+    - [Start tomcat server](#start-tomcat-server)
+    - [Mysql](#mysql)
+<<<<<<< HEAD
+=======
   - [Mysql](#mysql)
+>>>>>>> 383399cd349de5e1f64aecafd0912eed10f6746f
 
 Zixiao Wang  
 CSYE 6225
