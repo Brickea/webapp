@@ -1,5 +1,5 @@
 # Webapp<!-- omit in toc -->
-
+oi change during code review
 - [Prerequisites for building and deploying](#prerequisites-for-building-and-deploying)
   - [You should have JDK with 8+](#you-should-have-jdk-with-8)
   - [You will nedd Maven in order to complie the project](#you-will-nedd-maven-in-order-to-complie-the-project)
@@ -112,8 +112,4 @@ CREATE TABLE `webapp`.`User` (
   `accountUpdated` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `emailAddress_UNIQUE` (`emailAddress` ASC));
-<<<<<<< HEAD
 ```
-=======
-```
->>>>>>> a3c048a3bd0aae2903972241368abc9e6fa4c400
