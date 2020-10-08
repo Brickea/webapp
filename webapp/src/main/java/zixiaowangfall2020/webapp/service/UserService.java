@@ -19,29 +19,34 @@ import java.util.List;
 @Service
 public class UserService {
 
-    @Autowired UserMapper userMapper;
+    @Autowired
+    UserMapper userMapper;
 
-    @Autowired TokenService tokenService;
+//    @Autowired TokenService tokenService;
+
+    public User getByUserId(String id) {
+        return userMapper.getOneByUserId(id);
+    }
 
     /**
-    * @author: Zixiao Wang
-    * @date: 10/1/20
+     * @author: Zixiao Wang
+     * @date: 10/1/20
      * @param:
-    * @return: java.util.List<zixiaowangfall2020.webapp.pojo.User>
-    * @description: Get all user information
-    **/
-    public List<User> getAllUsers(){
+     * @return: java.util.List<zixiaowangfall2020.webapp.pojo.User>
+     * @description: Get all user information
+     **/
+    public List<User> getAllUsers() {
         return userMapper.getAll();
     }
 
     /**
-    * @author: Zixiao Wang
-    * @date: 10/1/20
+     * @author: Zixiao Wang
+     * @date: 10/1/20
      * @param: userName
-    * @return: zixiaowangfall2020.webapp.pojo.User
-    * @description: Get a particular user information by using userName
-    **/
-    public User getByUserName(String userName){
+     * @return: zixiaowangfall2020.webapp.pojo.User
+     * @description: Get a particular user information by using userName
+     **/
+    public User getByUserName(String userName) {
         return userMapper.getOneByUserName(userName);
     }
 
@@ -51,15 +56,15 @@ public class UserService {
 //    }
 
     /**
-    * @author: Zixiao Wang
-    * @date: 10/1/20
+     * @author: Zixiao Wang
+     * @date: 10/1/20
      * @param: newUser
-    * @return: void
-    * @description: Insert a new user information into database
-    **/
-    public void insertNewUser(User newUser){
+     * @return: void
+     * @description: Insert a new user information into database
+     **/
+    public void insertNewUser(User newUser) {
         // Get current time and save it as accountCreated, accountUpdated
-        Date dNow = new Date( );
+        Date dNow = new Date();
         SimpleDateFormat ft = new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a zzz");
 
         newUser.setAccountCreated(ft.format(dNow));
@@ -75,9 +80,9 @@ public class UserService {
         userMapper.insertNewUser(newUser);
     }
 
-    public void updateUser(User user){
+    public void updateUser(User user) {
         // Get current time and save it as accountCreated, accountUpdated
-        Date dNow = new Date( );
+        Date dNow = new Date();
         SimpleDateFormat ft = new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a zzz");
 
         user.setAccountUpdated(ft.format(dNow));

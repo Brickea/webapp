@@ -1,23 +1,19 @@
 package zixiaowangfall2020.webapp.pojo;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import javax.validation.constraints.Pattern;
+
 /**
  * @Author: Zixiao Wang
  * @Version: 1.0.0
  * @Description:
  **/
 
-import org.apache.ibatis.annotations.SelectKey;
-import org.springframework.lang.Nullable;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
-import javax.validation.constraints.Pattern;
-import java.util.Date;
-
-public class User {
+public class UpdateUser {
     @Null(message = "id should not be define by request!")
     String id;
-    @NotNull(message = "email should not be blank")
+    @Null(message = "email should be blank")
     @Pattern(regexp = "^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$", message = "email format is invalid!")
     String userName;
     //    Check for password length of 8 or shorter which should be rejected.
@@ -35,11 +31,11 @@ public class User {
     @Null(message = "accountUpdated should not be define by request!")
     String accountUpdated;
 
-    public User() {
+    public UpdateUser() {
 
     }
 
-    public User(String id, String userName, String password, String firstName, String lastName, String accountCreated, String accountUpdated) {
+    public UpdateUser(String id, String userName, String password, String firstName, String lastName, String accountCreated, String accountUpdated) {
         this.id = id;
         this.userName = userName;
         this.password = password;
