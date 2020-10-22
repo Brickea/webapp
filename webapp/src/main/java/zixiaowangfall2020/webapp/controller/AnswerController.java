@@ -8,15 +8,14 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import zixiaowangfall2020.webapp.pojo.Answer;
-import zixiaowangfall2020.webapp.pojo.QuestionAnswer;
-import zixiaowangfall2020.webapp.pojo.User;
-import zixiaowangfall2020.webapp.service.AnswerService;
-import zixiaowangfall2020.webapp.service.QuestionAnswerService;
-import zixiaowangfall2020.webapp.service.UserService;
+import org.springframework.web.multipart.MultipartFile;
+import zixiaowangfall2020.webapp.pojo.*;
+import zixiaowangfall2020.webapp.service.*;
 
 import javax.websocket.server.PathParam;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +35,12 @@ public class AnswerController {
 
     @Autowired
     QuestionAnswerService questionAnswerService;
+
+    @Autowired
+    WebappFileService webappFileService;
+
+    @Autowired
+    AnswerFileService answerFileService;
 
     @PostMapping("/{questionId}/answer")
     @ResponseBody
@@ -163,6 +168,86 @@ public class AnswerController {
         res.put("userId",answer.getUserId());
         res.put("answerText",answer.getAnswerText());
 
+        // get attachments for answer
+        List<WebappFile> webappFileList = webappFileService.getAllFileByAnswerId(answer.getAnswerId());
+        List<Map<String, Object>> webappFileRes = new ArrayList<>();
+        for (WebappFile webappFile : webappFileList) {
+            Map<String, Object> webappFileResSingleRes = new HashMap<>();
+            webappFileResSingleRes.put("fileName", webappFile.getFileName());
+            webappFileResSingleRes.put("s3ObjectName", webappFile.getS3ObjectName());
+            webappFileResSingleRes.put("fileId", webappFile.getFileId());
+            webappFileResSingleRes.put("createdTimeStamp", webappFile.getCreatedTimestamp());
+            webappFileRes.add(webappFileResSingleRes);
+        }
+        res.put("attachments", webappFileRes);
+
         return new ResponseEntity<Map<String, Object>>(res, HttpStatus.OK);
+    }
+
+    // file related
+    @PostMapping("/{questionId}/answer/{answerId}/file")
+    public ResponseEntity<Map<String, Object>> attachAnswerFile(@PathVariable("questionId") String questionId,
+                                                                @PathVariable("answerId") String answerId,
+                                                                @RequestPart(value= "file") final MultipartFile multipartFile) {
+        Map<String, Object> res = new HashMap<>();
+        QuestionAnswer questionAnswer = questionAnswerService.getQuestionAnswerByQuestionIdAnswerId(questionId, answerId);
+        if (questionAnswer == null) {
+            res.put("messgae", "no answer found!");
+            return new ResponseEntity<Map<String, Object>>(res, HttpStatus.NO_CONTENT);
+        }
+
+        // if creator
+        Answer answer = answerService.getAnswerById(answerId);
+        User currentUser = null;
+        // Get the activeUser
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String currentUserName = authentication.getName();
+
+            currentUser = userService.getByUserName(currentUserName);
+        }
+
+        if (!answer.getUserId().equals(currentUser.getId())) {
+            res.put("message", "you are not the creator!");
+            return new ResponseEntity<Map<String, Object>>(res, HttpStatus.UNAUTHORIZED);
+        }
+
+        // upload file
+        WebappFile webappFile = webappFileService.uploadAnswerFile(multipartFile);
+        final String webappFileResponse = "[" + multipartFile.getOriginalFilename() + "] uploaded successfully.";
+
+        // update questionFile table
+        AnswerFile answerFile = new AnswerFile(answerId,webappFile.getFileId());
+        answerFileService.insertAnswerFile(answerFile);
+        res.put("fileName",webappFile.getFileName());
+        res.put("s3ObjectName",webappFile.getS3ObjectName());
+        res.put("fileId",webappFile.getFileId());
+        res.put("createdTimestamp",webappFile.getCreatedTimestamp());
+
+        return new ResponseEntity<>(res,HttpStatus.CREATED);
+
+    }
+
+    @DeleteMapping("/{questionId}/answer/{answerId}/file/{fileId}")
+    public ResponseEntity<Map<String, Object>> deleteFileToTheAnswer(@PathVariable(value= "fileId") final String fileId) {
+        Map<String, Object> res = new HashMap<>();
+
+        // if the file exist
+        WebappFile webappFile = webappFileService.getOneByFileId(fileId);
+        if(webappFile==null){
+            res.put("message","no file found!");
+            return new ResponseEntity<>(res, HttpStatus.NO_CONTENT);
+        }
+
+        // delete file in s3
+        webappFileService.deleteAnswerFile(webappFile);
+        final String response = "[" + webappFile.getS3ObjectName() + "] delete successfully.";
+        res.put("message",response);
+
+        // delete questionFile and file in DB
+        answerFileService.deleteAnswerFileByFileId(fileId);
+        webappFileService.deleteFileByFileId(fileId);
+
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }

@@ -132,6 +132,12 @@ public class UserController {
         String token = null;
         Map<String,Object> map = null;
 
+        // Check if the format is correct
+        if(updateUser.getUserName()!=null){
+            map.put("Message","Email shall not be changed!");
+            return new ResponseEntity<Map<String,Object>>(map,HttpStatus.BAD_REQUEST);
+        }
+
         // Get the activeUser
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -175,10 +181,10 @@ public class UserController {
         Map<String,Object> map = new HashMap<String,Object>();
 
         // Check if the format is correct
-        if(newUser.getUserName()!=null){
-            map.put("Message","Email shall not be changed!");
-            return new ResponseEntity<Map<String,Object>>(map,HttpStatus.BAD_REQUEST);
-        }
+//        if(newUser.getUserName()!=null){
+//            map.put("Message","Email shall not be changed!");
+//            return new ResponseEntity<Map<String,Object>>(map,HttpStatus.BAD_REQUEST);
+//        }
         String regex = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$";
         if(!newUser.getPassword().matches(regex)){
             map.put("Message","password's length should longer than 8 and contain at least one char and one number!");

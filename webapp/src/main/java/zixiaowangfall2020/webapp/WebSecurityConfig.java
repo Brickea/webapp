@@ -55,6 +55,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT,"/v1/question/**/answer/**").hasRole("NORMAL")
                 .antMatchers(HttpMethod.DELETE,"/v1/question/**/answer/**").hasRole("NORMAL")
                 .antMatchers(HttpMethod.PUT,"/question/**").hasRole("NORMAL")
+                // File Api
+                .antMatchers(HttpMethod.POST,"/v1/question/**/file").hasRole("NORMAL")
+                .antMatchers(HttpMethod.DELETE,"/v1/question/**/file/**").hasRole("NORMAL")
+                .antMatchers(HttpMethod.POST,"/v1/question/**/answer/**/file").hasRole("NORMAL")
+                .antMatchers(HttpMethod.DELETE,"/v1/question/**/answer/**/file/**").hasRole("NORMAL")
                 .anyRequest().permitAll();
 
 
