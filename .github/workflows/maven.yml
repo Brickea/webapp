@@ -34,7 +34,7 @@ jobs:
         echo "${{env.ARTIFACT_NAME}}"
         pwd
         ls
-        mvn -B package --file pom.xml
+        mvn -B package --file webapp/pom.xml
         pwd
         ls -al
 
