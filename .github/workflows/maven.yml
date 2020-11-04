@@ -24,6 +24,6 @@ jobs:
     - name: Run all unit test Build with Maven
       run: mvn -B package --file webapp/pom.xml
     - name: Upload to S3
-      run : bash scripts/pipeline/release.sh ${{secrets.AWS_Bucket_Name}} "webapp/webapp-0.0.1-SNAPSHOT.jar" ${{secrets.AWSACCESSKEYID}} ${{secrets.AWSSECRETKEY}} "webapp/target/webapp-0.0.1-SNAPSHOT.jar"
+      run : bash scripts/release.sh ${{secrets.AWS_Bucket_Name}} "webapp/webapp-0.0.1-SNAPSHOT.jar" ${{secrets.AWSACCESSKEYID}} ${{secrets.AWSSECRETKEY}} "webapp/target/webapp-0.0.1-SNAPSHOT.jar"
 
       
