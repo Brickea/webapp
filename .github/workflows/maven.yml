@@ -38,4 +38,4 @@ jobs:
         sudo mvn -B clean install --file webapp/pom.xml
         sudo mvn -e -B package --file webapp/pom.xml
         pwd
-        ls -al
+        ls -al webapp/target
