@@ -42,3 +42,32 @@ jobs:
         cd webapp/target
         pwd
         ls -al
+
+    - name: Build Deployment Artifact
+      run: |
+        mkdir codedeploy_artifact
+        zip -r ${{ env.ARTIFACT_NAME }} webapp/target/webapp-0.0.1-SNAPSHOT.jar codedeploy/*.sh appspec.yml
+        ls -al
+        mv ${{ env.ARTIFACT_NAME }} codedeploy_artifact/
+        ls -al
+        cd codedeploy_artifact
+        ls -al
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWSACCESSKEYID }}
+        aws-secret-access-key: ${{secrets.AWSSECRETKEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Copy Artifact to S3
+      run: |
+        aws s3 sync ./codedeploy_artifact s3://${{ secrets.S3_CODEDEPLOY_BUCKET }}
+
+    - name: CodeDeploy API call
+      run: |
+        output=$(aws deploy create-deployment \
+        --application-name ${{ env.CODEDEPLOY_APPLICATION_NAME }} \
+        .....omitted....
+        --region ${{ env.AWS_REGION }} \
+        --output json)
