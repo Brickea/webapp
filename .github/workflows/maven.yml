@@ -39,3 +39,6 @@ jobs:
         sudo mvn -e -B package --file webapp/pom.xml
         pwd
         ls -al webapp/target
+        cd webapp/target
+        pwd
+        ls -al
