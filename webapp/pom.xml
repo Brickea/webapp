@@ -14,9 +14,9 @@
     <name>webapp</name>
     <description>Webapp for CSYE 6225</description>
 
-    <properties>
-        <java.version>11</java.version>
-    </properties>
+<!--    <properties>-->
+<!--        <java.version>11</java.version>-->
+<!--    </properties>-->
 
     <dependencies>
 
