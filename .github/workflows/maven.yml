@@ -35,7 +35,7 @@ jobs:
         echo "${{env.ARTIFACT_NAME}}"
         pwd
         ls
-        sudo mvn clean install
+        sudo mvn -B clean install --file webapp/pom.xml
         sudo mvn -e -B package --file webapp/pom.xml
         pwd
         ls -al
