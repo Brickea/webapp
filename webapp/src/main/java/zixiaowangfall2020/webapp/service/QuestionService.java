@@ -3,6 +3,7 @@ package zixiaowangfall2020.webapp.service;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import zixiaowangfall2020.webapp.MetricsConfig;
 import zixiaowangfall2020.webapp.mapper.QuestionAnswerMapper;
 import zixiaowangfall2020.webapp.mapper.QuestionCategoryMapper;
 import zixiaowangfall2020.webapp.mapper.QuestionMapper;
@@ -22,6 +23,7 @@ import java.util.List;
  **/
 @Service
 public class QuestionService {
+
     @Autowired
     QuestionMapper questionMapper;
 
@@ -42,7 +44,11 @@ public class QuestionService {
     * @description:
     **/
     public List<Question> getAllQuestions(){
-        return questionMapper.getAllQuestions();
+        long startTime = System.currentTimeMillis();
+        List<Question> res = questionMapper.getAllQuestions();
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("getAllQuestions",endTime-startTime);
+        return res;
     }
     
     /**
@@ -65,6 +71,7 @@ public class QuestionService {
     **/
     public void insertNewQuestion(Question question){
 
+
         // Get current time and save it as accountCreated, accountUpdated
         Date dNow = new Date();
         SimpleDateFormat ft = new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a zzz");
@@ -73,6 +80,10 @@ public class QuestionService {
         question.setUpdatedTimestamp(ft.format(dNow));
 
         questionMapper.insertNewQuestion(question);
+
+
+
+
     }
 
     public void addCategoriesByQuestionId(QuestionCategory questionCategory){
