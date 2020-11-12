@@ -41,6 +41,8 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<Map<String,Object>> insertNewCategory(@Valid @RequestBody Category category){
 
+        long startTime = System.currentTimeMillis();
+
         LOG.info("API CALL POST /v1/category insert new category");
         MetricsConfig.statsd.incrementCounter("API CALL POST /v1/category");
 
@@ -58,6 +60,10 @@ public class CategoryController {
         map.put("categoryId",category.getCategoryId());
         map.put("category",category.getCategory());
 
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL POST /v1/category",endTime-startTime);
+
+
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
     }
 
@@ -70,6 +76,8 @@ public class CategoryController {
     **/
     @GetMapping("/all")
     public ResponseEntity<Set<Object>> getAllCategory(){
+
+        long startTime = System.currentTimeMillis();
 
         LOG.info("API CALL GET /v1/category/all get all category");
         MetricsConfig.statsd.incrementCounter("API CALL GET /v1/category/all");
@@ -84,6 +92,10 @@ public class CategoryController {
             map.put("category",category.getCategory());
             set.add(map);
         }
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL GET /v1/category/all",endTime-startTime);
+
         return new ResponseEntity(set,HttpStatus.OK);
     }
 }

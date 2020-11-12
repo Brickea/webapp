@@ -2,6 +2,7 @@ package zixiaowangfall2020.webapp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import zixiaowangfall2020.webapp.MetricsConfig;
 import zixiaowangfall2020.webapp.mapper.AnswerMapper;
 import zixiaowangfall2020.webapp.mapper.QuestionAnswerMapper;
 import zixiaowangfall2020.webapp.pojo.Answer;
@@ -28,7 +29,16 @@ public class AnswerService {
     QuestionAnswerMapper questionAnswerMapper;
 
     public Answer getAnswerById(String answerId){
-        return answerMapper.getAnswerById(answerId);
+
+        long startTime = System.currentTimeMillis();
+
+        Answer res = answerMapper.getAnswerById(answerId);
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Database Query getAnswerById",endTime-startTime);
+
+        return res;
+
     }
 
     public void insertNewAnswer(Answer answer){
@@ -40,15 +50,26 @@ public class AnswerService {
         answer.setCreatedTimestamp(ft.format(dNow));
         answer.setUpdatedTimestamp(ft.format(dNow));
 
+        long startTime = System.currentTimeMillis();
+
         answerMapper.insertNewAnswer(answer);
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Database Query insertNewAnswer",endTime-startTime);
     }
 
     public List<Answer> getAllAnswerByQuestionId(String questionid){
         List<Answer> res = new ArrayList<>();
+
+        long startTime = System.currentTimeMillis();
+
         List<QuestionAnswer> questionAnswerList = questionAnswerMapper.getAllQuestionAnswerByQuestionId(questionid);
         for(QuestionAnswer questionAnswer: questionAnswerList){
             res.add(answerMapper.getAnswerById(questionAnswer.getAnswerId()));
         }
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Database Query getAllAnswerByQuestionId",endTime-startTime);
 
         return res;
     }
@@ -60,10 +81,22 @@ public class AnswerService {
 
         answer.setUpdatedTimestamp(ft.format(dNow));
 
+        long startTime = System.currentTimeMillis();
+
         answerMapper.updateAnswerByAnswer(answer);
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Database Query updateAnswerByAnswer",endTime-startTime);
     }
 
     public void deleteAnswerByAnswerId(String answerId){
+
+        long startTime = System.currentTimeMillis();
+
         answerMapper.deleteAnswerByAnswerId(answerId);
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Database Query deleteAnswerByAnswerId",endTime-startTime);
+
     }
 }

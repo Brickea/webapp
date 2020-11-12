@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import zixiaowangfall2020.webapp.MetricsConfig;
 import zixiaowangfall2020.webapp.mapper.WebappFileMapper;
 import zixiaowangfall2020.webapp.pojo.*;
 
@@ -72,34 +73,64 @@ public class WebappFileService {
 
 
     public void deleteQuestionFile(final WebappFile webappFile) {
+
+        long startTime = System.currentTimeMillis();
+
         final DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName + "/webapp/question", webappFile.getFileName());
         amazonS3.deleteObject(deleteObjectRequest);
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("S3 deleteQuestionFile",endTime-startTime);
     }
 
     public void deleteAnswerFile(final WebappFile webappFile) {
+
+        long startTime = System.currentTimeMillis();
+
         final DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName + "/webapp/answer", webappFile.getFileName());
         amazonS3.deleteObject(deleteObjectRequest);
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("S3 deleteAnswerFile",endTime-startTime);
     }
 
     // @Async annotation ensures that the method is executed in a different background thread
     // but not consume the main thread.
     //    @Async
     public WebappFile uploadQuestionFile(final MultipartFile multipartFile) {
+
+        long startTime = System.currentTimeMillis();
+
         try {
             final File file = convertMultiPartFileToFile(multipartFile);
             WebappFile webappFile = uploadFileToS3Bucket(bucketName + "/webapp/question", file);
+
+            long endTime = System.currentTimeMillis();
+            MetricsConfig.statsd.recordExecutionTime("S3 uploadQuestionFile",endTime-startTime);
+
             file.delete();  // To remove the file locally created in the project folder.
             return webappFile;
         } catch (final AmazonServiceException ex) {
             ex.printStackTrace();
         }
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("S3 uploadQuestionFile",endTime-startTime);
+
         return null;
     }
 
     public WebappFile uploadAnswerFile(final MultipartFile multipartFile) {
+
+        long startTime = System.currentTimeMillis();
+
         try {
             final File file = convertMultiPartFileToFile(multipartFile);
             WebappFile webappFile = uploadFileToS3Bucket(bucketName + "/webapp/answer", file);
+
+            long endTime = System.currentTimeMillis();
+            MetricsConfig.statsd.recordExecutionTime("S3 uploadAnswerFile",endTime-startTime);
+
             file.delete();  // To remove the file locally created in the project folder.
             return webappFile;
         } catch (final AmazonServiceException ex) {

@@ -48,16 +48,24 @@ public class WebappFileController {
     @PostMapping(value= "/upload")
     public ResponseEntity<String> uploadFile(@RequestPart(value= "file") final MultipartFile multipartFile) {
 
+        long startTime = System.currentTimeMillis();
+
         LOG.info("API CALL POST /v1/upload upload file");
         MetricsConfig.statsd.incrementCounter("API CALL POST /v1/upload");
 
         service.uploadQuestionFile(multipartFile);
         final String response = "[" + multipartFile.getOriginalFilename() + "] uploaded successfully.";
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL POST /v1/upload",endTime-startTime);
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/delete/{fileId}")
     public ResponseEntity<String> deleteFile(@PathVariable(value= "fileId") final String fileId) {
+
+        long startTime = System.currentTimeMillis();
 
         LOG.info("API CALL DELETE /v1/delete/{fileId} delete file");
         MetricsConfig.statsd.incrementCounter("API CALL DELETE /v1/delete/{fileId}");
@@ -70,6 +78,10 @@ public class WebappFileController {
 
         service.deleteQuestionFile(webappFile);
         final String response = "[" + webappFile.getS3ObjectName() + "] delete successfully.";
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL DELETE /v1/delete/{fileId}",endTime-startTime);
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

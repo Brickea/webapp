@@ -52,6 +52,8 @@ public class AnswerController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> answerQuestionByQuestionId(@PathVariable("questionId") String questionId, @RequestBody Map<String, Object> jsonObject) {
 
+        long startTime = System.currentTimeMillis();
+
         LOG.info("API CALL POST /v1/question/{questionId}/answer answer question by id");
         MetricsConfig.statsd.incrementCounter("API CALL POST /v1/question/{questionId}/answer");
 
@@ -82,6 +84,9 @@ public class AnswerController {
 
         HttpHeaders httpHeaders = new HttpHeaders();
 
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL POST /v1/question/{questionId}/",endTime-startTime);
+
         return new ResponseEntity<Map<String, Object>>(res, HttpStatus.CREATED);
     }
 
@@ -89,6 +94,8 @@ public class AnswerController {
     public ResponseEntity<Map<String, Object>> updateAnswerByQuestionIdAnswerId(@PathVariable("questionId") String questionId,
                                                                                 @PathVariable("answerId") String answerId,
                                                                                 @RequestBody Map<String, Object> jsonObject) {
+        long startTime = System.currentTimeMillis();
+
         LOG.info("API CALL PUT /v1/question/{questionId}/answer/{answerId} update answer by id");
         MetricsConfig.statsd.incrementCounter("API CALL PUT /v1/question/{questionId}/answer/{answerId}");
 
@@ -126,12 +133,17 @@ public class AnswerController {
         res.put("userId", answer.getUserId());
         res.put("answerText", answer.getAnswerText());
 
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL PUT /v1/question/{questionId}/answer/{answerId}",endTime-startTime);
+
         return new ResponseEntity<Map<String, Object>>(res, HttpStatus.OK);
     }
 
     @DeleteMapping("/{questionId}/answer/{answerId}")
     public ResponseEntity<Map<String, Object>> deleteAnswerByQuestionIdAnswerId(@PathVariable("questionId") String questionId,
                                                                                 @PathVariable("answerId") String answerId) {
+        long startTime = System.currentTimeMillis();
+
         LOG.info("API CALL DELETE /v1/question/{questionId}/answer/{answerId} delete answer by id");
         MetricsConfig.statsd.incrementCounter("API CALL DELETE /v1/question/{questionId}/answer/{answerId}");
 
@@ -161,6 +173,10 @@ public class AnswerController {
         answerService.deleteAnswerByAnswerId(answerId);
 
         res.put("message", "delete successfully!");
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL DELETE /v1/question/{questionId}/answer/{answerId}",endTime-startTime);
+
         return new ResponseEntity<Map<String, Object>>(res, HttpStatus.OK);
     }
 
@@ -168,6 +184,8 @@ public class AnswerController {
     @GetMapping("/{questionId}/answer/{answerId}")
     public ResponseEntity<Map<String, Object>> getAnswerByQuestionIdAnswerId(@PathVariable("questionId") String questionId,
                                                                              @PathVariable("answerId") String answerId) {
+
+        long startTime = System.currentTimeMillis();
 
         LOG.info("API CALL GET /v1/question/{questionId}/answer/{answerId} get answer by id");
         MetricsConfig.statsd.incrementCounter("API CALL GET /v1/question/{questionId}/answer/{answerId}");
@@ -200,6 +218,9 @@ public class AnswerController {
         }
         res.put("attachments", webappFileRes);
 
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL GET /v1/question/{questionId}/answer/{answerId}",endTime-startTime);
+
         return new ResponseEntity<Map<String, Object>>(res, HttpStatus.OK);
     }
 
@@ -208,6 +229,7 @@ public class AnswerController {
     public ResponseEntity<Map<String, Object>> attachAnswerFile(@PathVariable("questionId") String questionId,
                                                                 @PathVariable("answerId") String answerId,
                                                                 @RequestPart(value= "file") final MultipartFile multipartFile) {
+        long startTime = System.currentTimeMillis();
 
         LOG.info("API CALL POST /v1/question/{questionId}/answer/{answerId}/file add answer file by id");
         MetricsConfig.statsd.incrementCounter("API CALL POST /v1/question/{questionId}/answer/{answerId}/file");
@@ -247,12 +269,17 @@ public class AnswerController {
         res.put("fileId",webappFile.getFileId());
         res.put("createdTimestamp",webappFile.getCreatedTimestamp());
 
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL POST /v1/question/{questionId}/answer/{answerId}/file",endTime-startTime);
+
         return new ResponseEntity<>(res,HttpStatus.CREATED);
 
     }
 
     @DeleteMapping("/{questionId}/answer/{answerId}/file/{fileId}")
     public ResponseEntity<Map<String, Object>> deleteFileToTheAnswer(@PathVariable(value= "fileId") final String fileId) {
+
+        long startTime = System.currentTimeMillis();
 
         LOG.info("API CALL DELETE /v1/question/{questionId}/answer/{answerId}/file/{fileId} delete answer file by id");
         MetricsConfig.statsd.incrementCounter("API CALL DELETE /v1/question/{questionId}/answer/{answerId}/file/{fileId}");
@@ -274,6 +301,9 @@ public class AnswerController {
         // delete questionFile and file in DB
         answerFileService.deleteAnswerFileByFileId(fileId);
         webappFileService.deleteFileByFileId(fileId);
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL DELETE /v1/question/{questionId}/answer/{answerId}/file/{fileId}",endTime-startTime);
 
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
