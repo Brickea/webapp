@@ -9,6 +9,7 @@ package zixiaowangfall2020.webapp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import zixiaowangfall2020.webapp.MetricsConfig;
 import zixiaowangfall2020.webapp.mapper.UserMapper;
 import zixiaowangfall2020.webapp.pojo.User;
 
@@ -76,8 +77,12 @@ public class UserService {
         String encodedPassword = encoder.encode(rowPassword);
         newUser.setPassword(encodedPassword);
 
+        long startTime = System.currentTimeMillis();
 
         userMapper.insertNewUser(newUser);
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Database Query insertNewUser",endTime-startTime);
     }
 
     public void updateUser(User user) {
@@ -93,6 +98,11 @@ public class UserService {
         String encodedPassword = encoder.encode(rowPassword);
         user.setPassword(encodedPassword);
 
+        long startTime = System.currentTimeMillis();
+
         userMapper.updateUser(user);
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Database Query updateUser",endTime-startTime);
     }
 }

@@ -44,10 +44,14 @@ public class QuestionService {
     * @description:
     **/
     public List<Question> getAllQuestions(){
+
         long startTime = System.currentTimeMillis();
+
         List<Question> res = questionMapper.getAllQuestions();
+
         long endTime = System.currentTimeMillis();
-        MetricsConfig.statsd.recordExecutionTime("getAllQuestions",endTime-startTime);
+        MetricsConfig.statsd.recordExecutionTime("Database Query getAllQuestions",endTime-startTime);
+        
         return res;
     }
     
@@ -59,7 +63,15 @@ public class QuestionService {
     * @description:
     **/
     public Question getQuestionById(String questionId){
-        return questionMapper.getQuestionById(questionId);
+
+        long startTime = System.currentTimeMillis();
+
+        Question res = questionMapper.getQuestionById(questionId);
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Database Query getQuestionById",endTime-startTime);
+
+        return res;
     }
 
     /**
@@ -79,7 +91,12 @@ public class QuestionService {
         question.setCreatedTimestamp(ft.format(dNow));
         question.setUpdatedTimestamp(ft.format(dNow));
 
+        long startTime = System.currentTimeMillis();
+
         questionMapper.insertNewQuestion(question);
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Database Query insertNewQuestion",endTime-startTime);
 
 
 
@@ -87,11 +104,21 @@ public class QuestionService {
     }
 
     public void addCategoriesByQuestionId(QuestionCategory questionCategory){
+
+        long endTime = System.currentTimeMillis();
+
         questionCategoryMapper.interQuestionCategory(questionCategory);
+
+        long startTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Database Query interQuestionCategory",endTime-startTime);
     }
 
     public void deleteQuestionByQuestionId(String questionId){
+        long startTime = System.currentTimeMillis();
         questionMapper.deleteQuestionByQuestionId(questionId);
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Database Query deleteQuestionByQuestionId",endTime-startTime);
+
         questionCategoryMapper.deleteQuestionCategoryByQuestionId(questionId);
 
         List<Answer> answerList = answerService.getAllAnswerByQuestionId(questionId);
@@ -101,6 +128,8 @@ public class QuestionService {
         }
 
         questionAnswerMapper.deleteQuestionAnswerByQuestionId(questionId);
+
+
     }
 
     public void updateQuestionByQuestionId(Question question){
@@ -111,7 +140,12 @@ public class QuestionService {
 
         question.setUpdatedTimestamp(ft.format(dNow));
 
+        long startTime = System.currentTimeMillis();
+
         questionMapper.updateQuestionByQuestionId(question);
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Database Query updateQuestionByQuestionId",endTime-startTime);
     }
 
 }

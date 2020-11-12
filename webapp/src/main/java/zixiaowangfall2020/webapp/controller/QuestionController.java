@@ -80,6 +80,9 @@ public class QuestionController {
      **/
     @GetMapping("/questions")
     public ResponseEntity<List<Map<String, Object>>> getAllQuestion() {
+
+        long startTime = System.currentTimeMillis();
+
         LOG.info("API CALL GET /v1/questions get all questions");
         MetricsConfig.statsd.incrementCounter("test");
 //        MetricsConfig.statsd.incrementCounter("API CALL GET /v1/questions");
@@ -154,14 +157,21 @@ public class QuestionController {
             questionRes.add(questionSignleRes);
         }
 
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL GET /v1/questions",endTime-startTime);
+
         return new ResponseEntity<>(questionRes, HttpStatus.OK);
 
     }
 
     @GetMapping("/question/{questionId}")
     public ResponseEntity<Map<String, Object>> getQuestionByQuestionId(@PathVariable("questionId") String questionId) throws IOException {
+
+        long startTime = System.currentTimeMillis();
+
         LOG.info("API CALL GET /v1/question/{questionId} get question by question id");
         MetricsConfig.statsd.incrementCounter("API CALL GET /v1/question/{questionId}");
+
         // get question from Question table----------------------------------------------------------------------
         Map<String, Object> res = new HashMap<>();
         Question question = questionService.getQuestionById(questionId);
@@ -232,11 +242,17 @@ public class QuestionController {
         }
         res.put("attachments", webappFileRes);
 
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL GET /v1/question/{questionId}",endTime-startTime);
+
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @PostMapping("/question")
     public ResponseEntity<Map<String, Object>> postQuestion(@RequestBody Map<String, Object> jsonObject) throws IOException {
+
+        long startTime = System.currentTimeMillis();
+
         LOG.info("API CALL POST /v1/question post new question");
         MetricsConfig.statsd.incrementCounter("API CALL POST /v1/question");
 
@@ -305,11 +321,17 @@ public class QuestionController {
         }
         res.put("answers", answerList);
 
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL POST /v1/question",endTime-startTime);
+
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @DeleteMapping("/question/{questionId}")
     public ResponseEntity<Map<String, Object>> deleteQuestion(@PathVariable("questionId") String questionId) throws IOException {
+
+        long startTime = System.currentTimeMillis();
+
         LOG.info("API CALL DELETE /v1/question/{questionId} delete question by id");
         MetricsConfig.statsd.incrementCounter("API CALL DELETE /v1/question/{questionId}");
 
@@ -348,11 +370,18 @@ public class QuestionController {
         }
 
         res.put("message", "delete question successfully!");
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL DELETE /v1/question/{questionId}",endTime-startTime);
+
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @PutMapping("/question/{questionId}")
     public ResponseEntity<Map<String, Object>> updateQuestionByQuestionId(@PathVariable("questionId") String questionId, @RequestBody Map<String, Object> jsonObject) throws IOException {
+
+        long startTime = System.currentTimeMillis();
+
         LOG.info("API CALL PUT /v1/question/{questionId} update question by id");
         MetricsConfig.statsd.incrementCounter("API CALL PUT /v1/question/{questionId}");
 
@@ -443,6 +472,9 @@ public class QuestionController {
         }
         res.put("attachments", webappFileRes);
 
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL PUT /v1/question/{questionId}",endTime-startTime);
+
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
@@ -451,6 +483,9 @@ public class QuestionController {
     public ResponseEntity<Map<String, Object>> attachFileToTheQuestion(
             @PathVariable("questionId") final String questionId,
             @RequestPart(value= "file") final MultipartFile multipartFile){
+
+        long startTime = System.currentTimeMillis();
+
         LOG.info("API CALL POST /v1/question/{questionId}/file attach file to the question");
         MetricsConfig.statsd.incrementCounter("API CALL POST /v1/question/{questionId}/file");
 
@@ -488,12 +523,18 @@ public class QuestionController {
         res.put("fileId",webappFile.getFileId());
         res.put("createdTimestamp",webappFile.getCreatedTimestamp());
 
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL POST /v1/question/{questionId}/file",endTime-startTime);
+
         return new ResponseEntity<>(res,HttpStatus.CREATED);
 
     }
 
     @DeleteMapping("/question/{questionId}/file/{fileId}")
     public ResponseEntity<Map<String, Object>> deleteFileToTheQuestion(@PathVariable(value= "fileId") final String fileId) {
+
+        long startTime = System.currentTimeMillis();
+
         LOG.info("API CALL DELETE /v1/question/{questionId}/file/{fileId} delete file by question id and file id");
         MetricsConfig.statsd.incrementCounter("API CALL DELETE /v1/question/{questionId}/file/{fileId}");
 
@@ -514,6 +555,9 @@ public class QuestionController {
         // delete questionFile and file
         questionFileService.deleteQuestionFileByFileId(fileId);
         webappFileService.deleteFileByFileId(fileId);
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL DELETE /v1/question/{questionId}/file/{fileId}",endTime-startTime);
 
         return new ResponseEntity<>(res, HttpStatus.OK);
     }

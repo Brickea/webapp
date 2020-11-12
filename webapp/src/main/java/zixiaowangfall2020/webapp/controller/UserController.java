@@ -48,6 +48,8 @@ public class UserController {
     @GetMapping("/all")
     public ResponseEntity<Set<Object>> getAll(){
 
+        long startTime = System.currentTimeMillis();
+
         LOG.info("API CALL GET /v1/user/all get all users");
         MetricsConfig.statsd.incrementCounter("API CALL GET /v1/user/all");
 
@@ -65,6 +67,10 @@ public class UserController {
             map.put("account_updated",user.getAccountUpdated());
             set.add(map);
         }
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL GET /v1/user/all",endTime-startTime);
+
         return new ResponseEntity(set,HttpStatus.OK);
     }
 
@@ -78,6 +84,9 @@ public class UserController {
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<Map<String,Object>> getUserByUserId(@PathVariable("id") String id){
+
+        long startTime = System.currentTimeMillis();
+
         LOG.info("API CALL GET /v1/user/{id} get user by id");
         MetricsConfig.statsd.incrementCounter("API CALL GET /v1/user/{id}");
 
@@ -96,6 +105,9 @@ public class UserController {
         map.put("account_created",user.getAccountCreated());
         map.put("account_updated",user.getAccountUpdated());
 
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL GET /v1/user/{id}",endTime-startTime);
+
         return new ResponseEntity<>(map,HttpStatus.OK);
     }
 
@@ -109,6 +121,9 @@ public class UserController {
     **/
     @GetMapping("/self")
     public ResponseEntity<Map<String,Object>> getSelfUserInformation(HttpServletRequest request){
+
+        long startTime = System.currentTimeMillis();
+
         LOG.info("API CALL GET /v1/user/self get user self information");
         MetricsConfig.statsd.incrementCounter("API CALL GET /v1/user/self");
 
@@ -130,8 +145,16 @@ public class UserController {
             map.put("last_name",currentUser.getLastName());
             map.put("account_created",currentUser.getAccountCreated());
             map.put("account_updated",currentUser.getAccountUpdated());
+
+            long endTime = System.currentTimeMillis();
+            MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL GET /v1/user/self",endTime-startTime);
+
             return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
         }
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL GET /v1/user/self",endTime-startTime);
+
         return new ResponseEntity<Map<String,Object>>(map,HttpStatus.BAD_REQUEST);
     }
 
@@ -145,6 +168,9 @@ public class UserController {
     **/
     @PutMapping("/self")
     public ResponseEntity<Map<String,Object>> updateUserInformation(@NotNull @Valid @RequestBody UpdateUser updateUser, HttpServletRequest request){
+
+        long startTime = System.currentTimeMillis();
+
         LOG.info("API CALL PUT /v1/user/self update user self information");
         MetricsConfig.statsd.incrementCounter("API CALL PUT /v1/user/self");
 
@@ -181,8 +207,16 @@ public class UserController {
             map.put("last_name", currentUser.getLastName());
             map.put("account_created", currentUser.getAccountCreated());
             map.put("account_updated", currentUser.getAccountUpdated());
+
+            long endTime = System.currentTimeMillis();
+            MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL PUT /v1/user/self",endTime-startTime);
+
             return new ResponseEntity<Map<String, Object>>(map, HttpStatus.CREATED);
         }
+
+        long endTime = System.currentTimeMillis();
+        MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL PUT /v1/user/self",endTime-startTime);
+
         return new ResponseEntity<Map<String, Object>>(map, HttpStatus.NO_CONTENT);
     }
     
@@ -195,6 +229,8 @@ public class UserController {
     **/
     @PostMapping
     public ResponseEntity<Map<String,Object>> insertNewUser(@RequestBody User newUser){
+
+        long startTime = System.currentTimeMillis();
 
         LOG.info("API CALL POST /v1/user insert new user");
         MetricsConfig.statsd.incrementCounter("API CALL POST /v1/user");
@@ -227,9 +263,16 @@ public class UserController {
             map.put("account_updated",newUser.getAccountUpdated());
 
 
+            long endTime = System.currentTimeMillis();
+            MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL POST /v1/user",endTime-startTime);
+
             return new ResponseEntity<Map<String,Object>>(map, HttpStatus.CREATED);
         }else{
             map.put("error message","the email address has been used!");
+
+            long endTime = System.currentTimeMillis();
+            MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL POST /v1/user",endTime-startTime);
+
             return new ResponseEntity<Map<String,Object>>(map,HttpStatus.BAD_REQUEST);
         }
 
