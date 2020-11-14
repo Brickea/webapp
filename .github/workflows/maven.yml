@@ -56,7 +56,7 @@ jobs:
       with:
         # aws-access-key-id: ${{ secrets.AWSACCESSKEYID_DEV }}
         # aws-secret-access-key: ${{secrets.AWSSECRETKEY_DEV }}
-        aws-access-key-id: ${{ secrets.AWSACCESSKEYID_PROB }}
+        aws-access-key-id: ${{ secrets.AWSACCESSKEYID_PROD }}
         aws-secret-access-key: ${{secrets.AWSSECRETKEY_PROB }}
         aws-region: ${{ env.AWS_REGION }}
 
