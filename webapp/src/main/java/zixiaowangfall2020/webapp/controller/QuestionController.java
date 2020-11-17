@@ -1,7 +1,9 @@
 package zixiaowangfall2020.webapp.controller;
 
-import com.amazonaws.services.xray.model.Http;
+import com.amazonaws.services.appsync.model.LogConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import zixiaowangfall2020.webapp.mapper.QuestionFileMapper;
 import zixiaowangfall2020.webapp.pojo.*;
 import zixiaowangfall2020.webapp.service.*;
 
@@ -29,6 +30,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/v1")
 public class QuestionController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(LogConfig.class);
 
     @Autowired
     ObjectMapper objectMapper;
@@ -70,6 +73,7 @@ public class QuestionController {
      **/
     @GetMapping("/questions")
     public ResponseEntity<List<Map<String, Object>>> getAllQuestion() {
+        LOG.info("API CALL GET /v1/questions get all questions");
 
         // get question from Question table----------------------------------------------------------------------
         List<Question> questionList = questionService.getAllQuestions();
@@ -147,6 +151,7 @@ public class QuestionController {
 
     @GetMapping("/question/{questionId}")
     public ResponseEntity<Map<String, Object>> getQuestionByQuestionId(@PathVariable("questionId") String questionId) throws IOException {
+        LOG.info("API CALL GET /v1/question/{questionId} get question by question id");
         // get question from Question table----------------------------------------------------------------------
         Map<String, Object> res = new HashMap<>();
         Question question = questionService.getQuestionById(questionId);
@@ -222,6 +227,7 @@ public class QuestionController {
 
     @PostMapping("/question")
     public ResponseEntity<Map<String, Object>> postQuestion(@RequestBody Map<String, Object> jsonObject) throws IOException {
+        LOG.info("API CALL POST /v1/question post new question");
 
         Map<String, Object> res = new HashMap<>();
 
@@ -292,7 +298,9 @@ public class QuestionController {
     }
 
     @DeleteMapping("/question/{questionId}")
-    public ResponseEntity<Map<String, Object>> postQuestion(@PathVariable("questionId") String questionId) throws IOException {
+    public ResponseEntity<Map<String, Object>> deleteQuestion(@PathVariable("questionId") String questionId) throws IOException {
+        LOG.info("API CALL DELETE /v1//question/{questionId} delete question by id");
+
         Map<String, Object> res = new HashMap<>();
 
         Question question = questionService.getQuestionById(questionId);
@@ -333,6 +341,8 @@ public class QuestionController {
 
     @PutMapping("/question/{questionId}")
     public ResponseEntity<Map<String, Object>> updateQuestionByQuestionId(@PathVariable("questionId") String questionId, @RequestBody Map<String, Object> jsonObject) throws IOException {
+        LOG.info("API CALL PUT /v1/question/{questionId} update question by id");
+
         Map<String, Object> res = new HashMap<>();
 
         Question question = questionService.getQuestionById(questionId);
@@ -428,6 +438,8 @@ public class QuestionController {
     public ResponseEntity<Map<String, Object>> attachFileToTheQuestion(
             @PathVariable("questionId") final String questionId,
             @RequestPart(value= "file") final MultipartFile multipartFile){
+        LOG.info("API CALL POST /v1/question/{questionId}/file attach file to the question");
+
         Map<String, Object> res = new HashMap<>();
         // if question exist
         Question question = questionService.getQuestionById(questionId);
@@ -468,6 +480,8 @@ public class QuestionController {
 
     @DeleteMapping("/question/{questionId}/file/{fileId}")
     public ResponseEntity<Map<String, Object>> deleteFileToTheQuestion(@PathVariable(value= "fileId") final String fileId) {
+        LOG.info("API CALL DELETE /v1/question/{questionId}/file/{fileId} delete file by question id and file id");
+
         Map<String, Object> res = new HashMap<>();
 
         // if the file exist
@@ -488,6 +502,4 @@ public class QuestionController {
 
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
-
-
 }
