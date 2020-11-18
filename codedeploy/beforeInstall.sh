@@ -54,20 +54,6 @@ echo "creating cloudwatch configuration file"
 echo '{
   "metrics": {
     "metrics_collected": {
-      "cpu": {
-        "resources": [
-          "*"
-        ],
-        "measurement": [
-          "usage_active"
-        ],
-        "totalcpu": true
-      },
-      "mem": {
-         "measurement": [
-           "used_percent"
-        ]
-      },
       "statsd":{
          "service_address":":8125",
          "metrics_collection_interval":10,

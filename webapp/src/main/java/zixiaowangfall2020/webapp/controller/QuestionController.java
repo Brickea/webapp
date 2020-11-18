@@ -38,7 +38,7 @@ public class QuestionController {
     private static int appPort;
 
     private static final Logger LOG = LoggerFactory.getLogger(LogConfig.class);
-    private static final StatsDClient statsd = new NonBlockingStatsDClient("my.prefix", "localhost", 8125);
+    private static final StatsDClient statsd = new NonBlockingStatsDClient("my.prefix", "localhost", appPort);
 
     @Autowired
     ObjectMapper objectMapper;
