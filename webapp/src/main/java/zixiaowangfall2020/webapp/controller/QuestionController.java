@@ -2,9 +2,12 @@ package zixiaowangfall2020.webapp.controller;
 
 import com.amazonaws.services.appsync.model.LogConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.timgroup.statsd.StatsDClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -15,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import zixiaowangfall2020.webapp.pojo.*;
 import zixiaowangfall2020.webapp.service.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,8 +34,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/v1")
 public class QuestionController {
+    @Value("${server.port}")
+    private static int appPort;
 
     private static final Logger LOG = LoggerFactory.getLogger(LogConfig.class);
+    private static final StatsDClient statsd = new NonBlockingStatsDClient("csye6225.zixiaowang", "webapp", appPort);
 
     @Autowired
     ObjectMapper objectMapper;
@@ -74,6 +81,7 @@ public class QuestionController {
     @GetMapping("/questions")
     public ResponseEntity<List<Map<String, Object>>> getAllQuestion() {
         LOG.info("API CALL GET /v1/questions get all questions");
+        statsd.incrementCounter("API CALL /v1/questions.count");
 
         // get question from Question table----------------------------------------------------------------------
         List<Question> questionList = questionService.getAllQuestions();

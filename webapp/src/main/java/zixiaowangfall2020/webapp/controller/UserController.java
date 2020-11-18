@@ -6,6 +6,9 @@ package zixiaowangfall2020.webapp.controller;
  * @Description:
  **/
 
+import com.amazonaws.services.appsync.model.LogConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +31,8 @@ import java.util.*;
 @RequestMapping(value = "/v1/user",produces="application/json;charset=UTF-8")
 public class UserController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(LogConfig.class);
+
     @Autowired
     UserService userService;
 
@@ -41,6 +46,8 @@ public class UserController {
     **/
     @GetMapping("/all")
     public ResponseEntity<Set<Object>> getAll(){
+        LOG.info("API CALL GET /v1/user/all get all users");
+
         List<User> list = userService.getAllUsers();
 
         Set<Object> set = new HashSet <Object>();
@@ -68,6 +75,8 @@ public class UserController {
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<Map<String,Object>> getUserByUserId(@PathVariable("id") String id){
+        LOG.info("API CALL GET /v1/user/{id} get user by id");
+
         Map<String,Object> map = new HashMap<>();
 
         User user = userService.getByUserId(id);
@@ -96,6 +105,8 @@ public class UserController {
     **/
     @GetMapping("/self")
     public ResponseEntity<Map<String,Object>> getSelfUserInformation(HttpServletRequest request){
+        LOG.info("API CALL GET /v1/user/self get user self information");
+
         String token = null;
         Map<String,Object> map = null;
 
