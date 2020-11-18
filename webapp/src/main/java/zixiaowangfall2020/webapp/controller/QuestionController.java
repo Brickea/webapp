@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import zixiaowangfall2020.webapp.MetricsConfig;
 import zixiaowangfall2020.webapp.pojo.*;
 import zixiaowangfall2020.webapp.service.*;
 
@@ -34,11 +35,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/v1")
 public class QuestionController {
-    @Value("${server.port}")
-    private static int appPort;
+
 
     private static final Logger LOG = LoggerFactory.getLogger(LogConfig.class);
-    private static final StatsDClient statsd = new NonBlockingStatsDClient("my.prefix", "localhost", appPort);
+
 
     @Autowired
     ObjectMapper objectMapper;
@@ -81,7 +81,7 @@ public class QuestionController {
     @GetMapping("/questions")
     public ResponseEntity<List<Map<String, Object>>> getAllQuestion() {
         LOG.info("API CALL GET /v1/questions get all questions");
-        statsd.incrementCounter("API CALL /v1/questions.count");
+        MetricsConfig.statsd.incrementCounter("API CALL GET /v1/questions");
 
         // get question from Question table----------------------------------------------------------------------
         List<Question> questionList = questionService.getAllQuestions();
@@ -160,6 +160,7 @@ public class QuestionController {
     @GetMapping("/question/{questionId}")
     public ResponseEntity<Map<String, Object>> getQuestionByQuestionId(@PathVariable("questionId") String questionId) throws IOException {
         LOG.info("API CALL GET /v1/question/{questionId} get question by question id");
+        MetricsConfig.statsd.incrementCounter("API CALL GET /v1/question/{questionId}");
         // get question from Question table----------------------------------------------------------------------
         Map<String, Object> res = new HashMap<>();
         Question question = questionService.getQuestionById(questionId);
@@ -236,6 +237,7 @@ public class QuestionController {
     @PostMapping("/question")
     public ResponseEntity<Map<String, Object>> postQuestion(@RequestBody Map<String, Object> jsonObject) throws IOException {
         LOG.info("API CALL POST /v1/question post new question");
+        MetricsConfig.statsd.incrementCounter("API CALL POST /v1/question");
 
         Map<String, Object> res = new HashMap<>();
 
