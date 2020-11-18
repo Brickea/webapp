@@ -81,7 +81,8 @@ public class QuestionController {
     @GetMapping("/questions")
     public ResponseEntity<List<Map<String, Object>>> getAllQuestion() {
         LOG.info("API CALL GET /v1/questions get all questions");
-        MetricsConfig.statsd.incrementCounter("API CALL GET /v1/questions");
+        MetricsConfig.statsd.incrementCounter("test");
+//        MetricsConfig.statsd.incrementCounter("API CALL GET /v1/questions");
 
         // get question from Question table----------------------------------------------------------------------
         List<Question> questionList = questionService.getAllQuestions();

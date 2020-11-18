@@ -53,7 +53,7 @@ echo "creating cloudwatch configuration file"
 
 echo '{
   "metrics": {
-    "namespace": "DEV-1",
+    "namespace": "WEBAPP",
     "metrics_collected": {
       "statsd":{
          "service_address":":8125",
