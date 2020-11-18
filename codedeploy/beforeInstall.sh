@@ -56,7 +56,7 @@ echo '{
     "namespace": "DEV-1",
     "metrics_collected": {
       "statsd":{
-         "service_address":":8080",
+         "service_address":":8125",
          "metrics_collection_interval":10,
          "metrics_aggregation_interval":60
       }
@@ -85,7 +85,7 @@ echo '{
 #    "metrics":{
 #       "metrics_collected":{
 #          "statsd":{
-#             "service_address":":8080",
+#             "service_address":":8125",
 #             "metrics_collection_interval":10,
 #             "metrics_aggregation_interval":60
 #          }
