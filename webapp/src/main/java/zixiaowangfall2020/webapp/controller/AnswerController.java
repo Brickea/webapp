@@ -1,5 +1,8 @@
 package zixiaowangfall2020.webapp.controller;
 
+import com.amazonaws.services.appsync.model.LogConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -9,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import zixiaowangfall2020.webapp.MetricsConfig;
 import zixiaowangfall2020.webapp.pojo.*;
 import zixiaowangfall2020.webapp.service.*;
 
@@ -26,6 +30,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/v1/question")
 public class AnswerController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(LogConfig.class);
 
     @Autowired
     AnswerService answerService;
@@ -45,6 +51,9 @@ public class AnswerController {
     @PostMapping("/{questionId}/answer")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> answerQuestionByQuestionId(@PathVariable("questionId") String questionId, @RequestBody Map<String, Object> jsonObject) {
+
+        LOG.info("API CALL POST /v1/question/{questionId}/answer answer question by id");
+        MetricsConfig.statsd.incrementCounter("API CALL POST /v1/question/{questionId}/answer");
 
         Map<String, Object> res = new HashMap<>();
         // insert new answer into Answer talbe -------------------------------------------------------------------------
@@ -80,6 +89,9 @@ public class AnswerController {
     public ResponseEntity<Map<String, Object>> updateAnswerByQuestionIdAnswerId(@PathVariable("questionId") String questionId,
                                                                                 @PathVariable("answerId") String answerId,
                                                                                 @RequestBody Map<String, Object> jsonObject) {
+        LOG.info("API CALL PUT /v1/question/{questionId}/answer/{answerId} update answer by id");
+        MetricsConfig.statsd.incrementCounter("API CALL PUT /v1/question/{questionId}/answer/{answerId}");
+
         Map<String, Object> res = new HashMap<>();
         QuestionAnswer questionAnswer = questionAnswerService.getQuestionAnswerByQuestionIdAnswerId(questionId, answerId);
         if (questionAnswer == null) {
@@ -120,6 +132,9 @@ public class AnswerController {
     @DeleteMapping("/{questionId}/answer/{answerId}")
     public ResponseEntity<Map<String, Object>> deleteAnswerByQuestionIdAnswerId(@PathVariable("questionId") String questionId,
                                                                                 @PathVariable("answerId") String answerId) {
+        LOG.info("API CALL DELETE /v1/question/{questionId}/answer/{answerId} delete answer by id");
+        MetricsConfig.statsd.incrementCounter("API CALL DELETE /v1/question/{questionId}/answer/{answerId}");
+
         Map<String, Object> res = new HashMap<>();
         QuestionAnswer questionAnswer = questionAnswerService.getQuestionAnswerByQuestionIdAnswerId(questionId, answerId);
         if (questionAnswer == null) {
@@ -153,6 +168,10 @@ public class AnswerController {
     @GetMapping("/{questionId}/answer/{answerId}")
     public ResponseEntity<Map<String, Object>> getAnswerByQuestionIdAnswerId(@PathVariable("questionId") String questionId,
                                                                              @PathVariable("answerId") String answerId) {
+
+        LOG.info("API CALL GET /v1/question/{questionId}/answer/{answerId} get answer by id");
+        MetricsConfig.statsd.incrementCounter("API CALL GET /v1/question/{questionId}/answer/{answerId}");
+
         Map<String, Object> res = new HashMap<>();
         QuestionAnswer questionAnswer = questionAnswerService.getQuestionAnswerByQuestionIdAnswerId(questionId, answerId);
         if (questionAnswer == null) {
@@ -189,6 +208,10 @@ public class AnswerController {
     public ResponseEntity<Map<String, Object>> attachAnswerFile(@PathVariable("questionId") String questionId,
                                                                 @PathVariable("answerId") String answerId,
                                                                 @RequestPart(value= "file") final MultipartFile multipartFile) {
+
+        LOG.info("API CALL POST /v1/question/{questionId}/answer/{answerId}/file add answer file by id");
+        MetricsConfig.statsd.incrementCounter("API CALL POST /v1/question/{questionId}/answer/{answerId}/file");
+
         Map<String, Object> res = new HashMap<>();
         QuestionAnswer questionAnswer = questionAnswerService.getQuestionAnswerByQuestionIdAnswerId(questionId, answerId);
         if (questionAnswer == null) {
@@ -230,6 +253,10 @@ public class AnswerController {
 
     @DeleteMapping("/{questionId}/answer/{answerId}/file/{fileId}")
     public ResponseEntity<Map<String, Object>> deleteFileToTheAnswer(@PathVariable(value= "fileId") final String fileId) {
+
+        LOG.info("API CALL DELETE /v1/question/{questionId}/answer/{answerId}/file/{fileId} delete answer file by id");
+        MetricsConfig.statsd.incrementCounter("API CALL DELETE /v1/question/{questionId}/answer/{answerId}/file/{fileId}");
+
         Map<String, Object> res = new HashMap<>();
 
         // if the file exist

@@ -1,9 +1,13 @@
 package zixiaowangfall2020.webapp.controller;
 
+import com.amazonaws.services.appsync.model.LogConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import zixiaowangfall2020.webapp.MetricsConfig;
 import zixiaowangfall2020.webapp.pojo.Category;
 import zixiaowangfall2020.webapp.pojo.User;
 import zixiaowangfall2020.webapp.service.CategoryService;
@@ -20,6 +24,9 @@ import java.util.*;
 @RestController
 @RequestMapping(value = "/v1/category",produces="application/json;charset=UTF-8")
 public class CategoryController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(LogConfig.class);
+
     @Autowired
     CategoryService categoryService;
 
@@ -33,6 +40,10 @@ public class CategoryController {
     **/
     @PostMapping
     public ResponseEntity<Map<String,Object>> insertNewCategory(@Valid @RequestBody Category category){
+
+        LOG.info("API CALL POST /v1/category insert new category");
+        MetricsConfig.statsd.incrementCounter("API CALL POST /v1/category");
+
         Map<String,Object> map = new HashMap<String,Object>();
         // find category to see if it's already existed.
         Category exist = categoryService.getCategoryByCategory(category.getCategory());
@@ -59,6 +70,10 @@ public class CategoryController {
     **/
     @GetMapping("/all")
     public ResponseEntity<Set<Object>> getAllCategory(){
+
+        LOG.info("API CALL GET /v1/category/all get all category");
+        MetricsConfig.statsd.incrementCounter("API CALL GET /v1/category/all");
+
         List<Category> list = categoryService.getAllCategory();
 
         Set<Object> set = new HashSet<Object>();

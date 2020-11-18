@@ -16,6 +16,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import zixiaowangfall2020.webapp.MetricsConfig;
 import zixiaowangfall2020.webapp.pojo.UpdateUser;
 import zixiaowangfall2020.webapp.pojo.User;
 import zixiaowangfall2020.webapp.service.UserService;
@@ -46,7 +47,9 @@ public class UserController {
     **/
     @GetMapping("/all")
     public ResponseEntity<Set<Object>> getAll(){
+
         LOG.info("API CALL GET /v1/user/all get all users");
+        MetricsConfig.statsd.incrementCounter("API CALL GET /v1/user/all");
 
         List<User> list = userService.getAllUsers();
 
@@ -76,6 +79,7 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<Map<String,Object>> getUserByUserId(@PathVariable("id") String id){
         LOG.info("API CALL GET /v1/user/{id} get user by id");
+        MetricsConfig.statsd.incrementCounter("API CALL GET /v1/user/{id}");
 
         Map<String,Object> map = new HashMap<>();
 
@@ -106,6 +110,7 @@ public class UserController {
     @GetMapping("/self")
     public ResponseEntity<Map<String,Object>> getSelfUserInformation(HttpServletRequest request){
         LOG.info("API CALL GET /v1/user/self get user self information");
+        MetricsConfig.statsd.incrementCounter("API CALL GET /v1/user/self");
 
         String token = null;
         Map<String,Object> map = null;
@@ -140,6 +145,9 @@ public class UserController {
     **/
     @PutMapping("/self")
     public ResponseEntity<Map<String,Object>> updateUserInformation(@NotNull @Valid @RequestBody UpdateUser updateUser, HttpServletRequest request){
+        LOG.info("API CALL PUT /v1/user/self update user self information");
+        MetricsConfig.statsd.incrementCounter("API CALL PUT /v1/user/self");
+
         String token = null;
         Map<String,Object> map = null;
 
@@ -187,6 +195,10 @@ public class UserController {
     **/
     @PostMapping
     public ResponseEntity<Map<String,Object>> insertNewUser(@RequestBody User newUser){
+
+        LOG.info("API CALL POST /v1/user insert new user");
+        MetricsConfig.statsd.incrementCounter("API CALL POST /v1/user");
+
         // if the newUser has the same emailAddress with someone in database
         String newUserUserName = newUser.getUserName();
         Map<String,Object> map = new HashMap<String,Object>();

@@ -309,7 +309,8 @@ public class QuestionController {
 
     @DeleteMapping("/question/{questionId}")
     public ResponseEntity<Map<String, Object>> deleteQuestion(@PathVariable("questionId") String questionId) throws IOException {
-        LOG.info("API CALL DELETE /v1//question/{questionId} delete question by id");
+        LOG.info("API CALL DELETE /v1/question/{questionId} delete question by id");
+        MetricsConfig.statsd.incrementCounter("API CALL DELETE /v1/question/{questionId}");
 
         Map<String, Object> res = new HashMap<>();
 
@@ -352,6 +353,7 @@ public class QuestionController {
     @PutMapping("/question/{questionId}")
     public ResponseEntity<Map<String, Object>> updateQuestionByQuestionId(@PathVariable("questionId") String questionId, @RequestBody Map<String, Object> jsonObject) throws IOException {
         LOG.info("API CALL PUT /v1/question/{questionId} update question by id");
+        MetricsConfig.statsd.incrementCounter("API CALL PUT /v1/question/{questionId}");
 
         Map<String, Object> res = new HashMap<>();
 
@@ -449,6 +451,7 @@ public class QuestionController {
             @PathVariable("questionId") final String questionId,
             @RequestPart(value= "file") final MultipartFile multipartFile){
         LOG.info("API CALL POST /v1/question/{questionId}/file attach file to the question");
+        MetricsConfig.statsd.incrementCounter("API CALL POST /v1/question/{questionId}/file");
 
         Map<String, Object> res = new HashMap<>();
         // if question exist
@@ -491,6 +494,7 @@ public class QuestionController {
     @DeleteMapping("/question/{questionId}/file/{fileId}")
     public ResponseEntity<Map<String, Object>> deleteFileToTheQuestion(@PathVariable(value= "fileId") final String fileId) {
         LOG.info("API CALL DELETE /v1/question/{questionId}/file/{fileId} delete file by question id and file id");
+        MetricsConfig.statsd.incrementCounter("API CALL DELETE /v1/question/{questionId}/file/{fileId}");
 
         Map<String, Object> res = new HashMap<>();
 
