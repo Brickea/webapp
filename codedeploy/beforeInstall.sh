@@ -1,11 +1,35 @@
 #!/bin/bash
 
 echo "******************Remove all previous files******************"
-sudo rm -r /home/ubuntu/webapp
-sudo rm /home/ubuntu/application.properties
-sudo rm /home/ubuntu/app.json
-sudo rm /home/ubuntu/infrastructure.json
+if  [ ! -d  "/home/ubuntu/webapp/"  ]; then
+echo  "No webapp"
+else
+rm  -rf  /home/ubuntu/webapp
+fi
 
+if  [ ! -f  "/home/ubuntu/application.properties"  ]; then
+echo  "No application.properties"
+else
+rm  -rf  /home/ubuntu/application.properties
+fi
+
+if  [ ! -f  "/home/ubuntu/app.json"  ]; then
+echo  "No app.json"
+else
+rm  -rf  /home/ubuntu/app.json
+fi
+
+if  [ ! -f  "/home/ubuntu/infrastructure.json"  ]; then
+echo  "No infrastructure.json"
+else
+rm  -rf  /home/ubuntu/infrastructure.json
+fi
+
+if  [ ! -f  "/home/ubuntu/matrics.json"  ]; then
+echo  "No matrics.json"
+else
+rm  -rf  /home/ubuntu/matrics.json
+fi
 echo "******************Start deploy code******************"
 echo "Excute user data"
 sudo /var/lib/cloud/instance/scripts/part-001
