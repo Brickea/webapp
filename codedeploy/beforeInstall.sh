@@ -35,21 +35,21 @@ echo "Excute user data"
 sudo /var/lib/cloud/instance/scripts/part-001
 
 echo "creating cloudwatch configuration file"
-echo '{
-  "logs": {
-    "logs_collected": {
-      "files": {
-        "collect_list": [
-          {
-            "file_path": "/opt/codedeploy-agent/webapp.log",
-            "log_group_name": "webapp"
-          }
-        ]
-      }
-    }
-  }
-}
-' > /home/ubuntu/app.json
+# echo '{
+#   "logs": {
+#     "logs_collected": {
+#       "files": {
+#         "collect_list": [
+#           {
+#             "file_path": "/opt/codedeploy-agent/webapp.log",
+#             "log_group_name": "webapp"
+#           }
+#         ]
+#       }
+#     }
+#   }
+# }
+# ' > /home/ubuntu/app.json
 
 echo '{
   "metrics": {
@@ -67,8 +67,13 @@ echo '{
          "measurement": [
            "used_percent"
         ]
+      },
+      "statsd":{
+         "service_address":":8125",
+         "metrics_collection_interval":10,
+         "metrics_aggregation_interval":60
       }
-}
+    }
   },
   "logs": {
     "logs_collected": {
@@ -77,23 +82,27 @@ echo '{
           {
             "file_path": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log",
             "log_group_name": "amazon-cloudwatch-agent"
+          },
+          {
+            "file_path": "/opt/codedeploy-agent/webapp.log",
+            "log_group_name": "webapp"
           }
         ]
       }
     }
   }
 }
-' > /home/ubuntu/infrastructure.json
+' > /home/ubuntu/app.json
 
-echo '{
-   "metrics":{
-      "metrics_collected":{
-         "statsd":{
-            "service_address":":8080",
-            "metrics_collection_interval":10,
-            "metrics_aggregation_interval":60
-         }
-      }
-   }
-}
-' > /home/ubuntu/matrics.json
+# echo '{
+#    "metrics":{
+#       "metrics_collected":{
+#          "statsd":{
+#             "service_address":":8080",
+#             "metrics_collection_interval":10,
+#             "metrics_aggregation_interval":60
+#          }
+#       }
+#    }
+# }
+# ' > /home/ubuntu/matrics.json
