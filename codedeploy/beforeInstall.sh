@@ -53,6 +53,7 @@ echo "creating cloudwatch configuration file"
 
 echo '{
   "metrics": {
+    "namespace": "DEV-1",
     "metrics_collected": {
       "statsd":{
          "service_address":":8080",
