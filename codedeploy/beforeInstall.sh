@@ -96,4 +96,4 @@ echo '{
       }
    }
 }
-' > matrics.json
+' > /home/ubuntu/matrics.json
