@@ -15,5 +15,5 @@ public class MetricsConfig {
     @Value("${server.port}")
     private static int appPort;
 
-    public static final StatsDClient statsd = new NonBlockingStatsDClient("Webapp", "localhost", appPort);
+    public static final StatsDClient statsd = new NonBlockingStatsDClient("Webapp", "localhost", 8125);
 }
