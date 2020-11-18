@@ -11,7 +11,10 @@ env:
   CODEDEPLOY_APPLICATION_DEPLOYMENT_GROUP_NAME: csye6225-webapp-deployment
   AWS_REGION: us-east-1
 
-on: push
+on: 
+  push:
+    branches:
+      master
 
 jobs:
   ci_cd:
