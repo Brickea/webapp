@@ -15,6 +15,7 @@ on:
   push:
     branches:
       - master
+      - root_code_deploy
 
 jobs:
   ci_cd:

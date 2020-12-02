@@ -107,9 +107,9 @@ public class AnswerController {
 
         User questionUser = userService.getByUserId(question.getUserId());
 
-        String msg = "Dear "+currentUser.getLastName()+""+
+        String msg = "Dear "+currentUser.getLastName()+
                 "Your question '"+question.getQuestionText()+" ' has been answered!"+
-                "Check this out: "+domainName+"/v1/question/"+questionId+"/answer/"+answer.getAnswerId()+" ";
+                "Check this out: "+domainName+"/v1/question/"+questionId+"/answer/"+answer.getAnswerId();
 
         LOG.info(msg);
         LOG.info(topicArn);
@@ -170,9 +170,9 @@ public class AnswerController {
 
         User questionUser = userService.getByUserId(question.getUserId());
 
-        String msg = "Dear "+currentUser.getLastName()+""+
+        String msg = "Dear "+currentUser.getLastName()+
                 "The answer: '"+answer.getAnswerText()+"' of your question '"+question.getQuestionText()+" ' has been updated!"+
-                "Check this out: "+domainName+"/v1/question/"+questionId+"/answer/"+answer.getAnswerId()+" ";
+                "Check this out: "+domainName+"/v1/question/"+questionId+"/answer/"+answer.getAnswerId();
 
         LOG.info(msg);
         LOG.info(topicArn);
@@ -208,6 +208,7 @@ public class AnswerController {
 
         if (!answer.getUserId().equals(currentUser.getId())) {
             res.put("message", "you are not the creator!");
+
             return new ResponseEntity<Map<String, Object>>(res, HttpStatus.UNAUTHORIZED);
         }
 
@@ -225,7 +226,7 @@ public class AnswerController {
 
         User questionUser = userService.getByUserId(question.getUserId());
 
-        String msg = "Dear "+currentUser.getLastName()+""+
+        String msg = "Dear "+currentUser.getLastName()+
                 "The answer: '"+answer.getAnswerText()+"' of your question '"+question.getQuestionText()+" ' has been deleted!";
 
         LOG.info(msg);
