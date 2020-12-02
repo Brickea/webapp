@@ -107,8 +107,8 @@ public class AnswerController {
 
         User questionUser = userService.getByUserId(question.getUserId());
 
-        String msg = "Dear "+currentUser.getLastName()+"\n"+
-                "Your question '"+question.getQuestionText()+" ' has been answered!\n"+
+        String msg = "Dear "+currentUser.getLastName()+""+
+                "Your question '"+question.getQuestionText()+" ' has been answered!"+
                 "Check this out: "+domainName+"/v1/question/"+questionId+"/answer/"+answer.getAnswerId()+" ";
 
         LOG.info(msg);
@@ -170,8 +170,8 @@ public class AnswerController {
 
         User questionUser = userService.getByUserId(question.getUserId());
 
-        String msg = "Dear "+currentUser.getLastName()+"\n"+
-                "The answer:"+answer.getAnswerText()+"of your question '"+question.getQuestionText()+" ' has been updated!\n"+
+        String msg = "Dear "+currentUser.getLastName()+""+
+                "The answer: '"+answer.getAnswerText()+"' of your question '"+question.getQuestionText()+" ' has been updated!"+
                 "Check this out: "+domainName+"/v1/question/"+questionId+"/answer/"+answer.getAnswerId()+" ";
 
         LOG.info(msg);
@@ -225,8 +225,8 @@ public class AnswerController {
 
         User questionUser = userService.getByUserId(question.getUserId());
 
-        String msg = "Dear "+currentUser.getLastName()+"\n"+
-                "The answer:"+answer.getAnswerText()+"of your question '"+question.getQuestionText()+" ' has been deleted!\n";
+        String msg = "Dear "+currentUser.getLastName()+""+
+                "The answer: '"+answer.getAnswerText()+"' of your question '"+question.getQuestionText()+" ' has been deleted!";
 
         LOG.info(msg);
         LOG.info(topicArn);
