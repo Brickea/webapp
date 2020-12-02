@@ -1,9 +1,13 @@
 package zixiaowangfall2020.webapp.controller;
 
 import com.amazonaws.services.appsync.model.LogConfig;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.AmazonSNSClient;
+import com.amazonaws.services.sns.model.PublishRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import zixiaowangfall2020.webapp.AWSTopicConfig;
 import zixiaowangfall2020.webapp.MetricsConfig;
 import zixiaowangfall2020.webapp.pojo.*;
 import zixiaowangfall2020.webapp.service.*;
@@ -34,6 +39,9 @@ public class AnswerController {
     private static final Logger LOG = LoggerFactory.getLogger(LogConfig.class);
 
     @Autowired
+    QuestionService questionService;
+
+    @Autowired
     AnswerService answerService;
 
     @Autowired
@@ -48,12 +56,19 @@ public class AnswerController {
     @Autowired
     AnswerFileService answerFileService;
 
+    @Autowired
+    AmazonSNS amazonSNS;
+
+    @Value("${webapp.domainname}")
+    String domainName;
+
+    @Value("${aws.topic.arn}")
+    String topicArn;
+
     @PostMapping("/{questionId}/answer")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> answerQuestionByQuestionId(@PathVariable("questionId") String questionId, @RequestBody Map<String, Object> jsonObject) {
-
         long startTime = System.currentTimeMillis();
-
         LOG.info("API CALL POST /v1/question/{questionId}/answer answer question by id");
         MetricsConfig.statsd.incrementCounter("API CALL POST /v1/question/{questionId}/answer");
 
@@ -86,6 +101,20 @@ public class AnswerController {
 
         long endTime = System.currentTimeMillis();
         MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL POST /v1/question/{questionId}/",endTime-startTime);
+
+        // inform question user that the answer has been answered
+        Question question = questionService.getQuestionById(questionId);
+
+        User questionUser = userService.getByUserId(question.getUserId());
+
+        String msg = "Dear "+currentUser.getLastName()+"\n"+
+                "Your question '"+question.getQuestionText()+" ' has been answered!\n"+
+                "Check this out: "+domainName+"/v1/question/"+questionId+"/answer/"+answer.getAnswerId()+" ";
+
+        LOG.info(msg);
+        LOG.info(topicArn);
+        LOG.info(currentUser.getUserName());
+        amazonSNS.publish(new PublishRequest(topicArn,msg,questionUser.getUserName()));
 
         return new ResponseEntity<Map<String, Object>>(res, HttpStatus.CREATED);
     }
@@ -136,6 +165,20 @@ public class AnswerController {
         long endTime = System.currentTimeMillis();
         MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL PUT /v1/question/{questionId}/answer/{answerId}",endTime-startTime);
 
+        // inform user that the answer has been updated
+        Question question = questionService.getQuestionById(questionId);
+
+        User questionUser = userService.getByUserId(question.getUserId());
+
+        String msg = "Dear "+currentUser.getLastName()+"\n"+
+                "The answer: '"+answer.getAnswerText()+"' of your question '"+question.getQuestionText()+" ' has been updated!\n"+
+                "Check this out: "+domainName+"/v1/question/"+questionId+"/answer/"+answer.getAnswerId()+" ";
+
+        LOG.info(msg);
+        LOG.info(topicArn);
+        LOG.info(currentUser.getUserName());
+        amazonSNS.publish(new PublishRequest(topicArn,msg,questionUser.getUserName()));
+
         return new ResponseEntity<Map<String, Object>>(res, HttpStatus.OK);
     }
 
@@ -176,6 +219,19 @@ public class AnswerController {
 
         long endTime = System.currentTimeMillis();
         MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL DELETE /v1/question/{questionId}/answer/{answerId}",endTime-startTime);
+
+        // inform user that the answer has been deleted
+        Question question = questionService.getQuestionById(questionId);
+
+        User questionUser = userService.getByUserId(question.getUserId());
+
+        String msg = "Dear "+currentUser.getLastName()+"\n"+
+                "The answer: '"+answer.getAnswerText()+"' of your question '"+question.getQuestionText()+" ' has been deleted!\n";
+
+        LOG.info(msg);
+        LOG.info(topicArn);
+        LOG.info(currentUser.getUserName());
+        amazonSNS.publish(new PublishRequest(topicArn,msg,questionUser.getUserName()));
 
         return new ResponseEntity<Map<String, Object>>(res, HttpStatus.OK);
     }
