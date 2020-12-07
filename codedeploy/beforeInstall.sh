@@ -99,9 +99,9 @@ sudo curl -O https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem /home/u
 
 ls
 
-openssl x509 -outform der -in rds-ca-2019-root.pem -out certificate.der
+sudo openssl x509 -outform der -in rds-ca-2019-root.pem -out certificate.der
 
-keytool -importcert -alias rds -keystore cacerts -file certificate.der -storepass fjwwzx970814 -noprompt
+sudo keytool -importcert -alias rds -keystore cacerts -file certificate.der -storepass fjwwzx970814 -noprompt
 
 # keytool -importcert -alias MySQLCACert -file /home/ubuntu/rds-ca-2019-root.pem \
 #     -keystore truststore -storepass fjwwzx970814
