@@ -14,7 +14,8 @@ env:
 on: 
   push:
     branches:
-      master
+      - master
+      - fix_authUser_error
 
 jobs:
   ci_cd:
