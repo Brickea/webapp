@@ -95,6 +95,8 @@ echo '{
 # ' > /home/ubuntu/matrics.json
 
 echo 'add ca bundle'
-openssl x509 -outform der -in /home/ubuntu/webapp/rds-combined-ca-bundle.pem -out /home/ubuntu/webapp/certificate.der
+curl -O https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem /home/ubuntu/
+
+openssl x509 -outform der -in /home/ubuntu/rds-ca-2019-root.pem -out /home/ubuntu/webapp/certificate.der
 
 keytool -import -alias rds -keystore cacerts -file /home/ubuntu/webapp/certificate.der
