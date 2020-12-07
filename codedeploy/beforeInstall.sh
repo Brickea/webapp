@@ -97,6 +97,8 @@ echo '{
 echo 'add ca bundle'
 sudo curl -O https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem /home/ubuntu/
 
+ls
+
 openssl x509 -outform der -in /home/ubuntu/rds-ca-2019-root.pem -out /home/ubuntu/certificate.der
 
 keytool -importcert -alias rds -keystore cacerts -file /home/ubuntu/certificate.der -storepass fjwwzx970814 -noprompt
