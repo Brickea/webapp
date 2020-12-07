@@ -97,6 +97,9 @@ echo '{
 echo 'add ca bundle'
 curl -O https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem /home/ubuntu/
 
-openssl x509 -outform der -in /home/ubuntu/rds-ca-2019-root.pem -out /home/ubuntu/webapp/certificate.der
+openssl x509 -outform der -in /home/ubuntu/rds-ca-2019-root.pem -out /home/ubuntu/certificate.der
 
-keytool -import -alias rds -keystore cacerts -file /home/ubuntu/webapp/certificate.der
+keytool -importcert -alias rds -keystore cacerts -file /home/ubuntu/certificate.der -storepass fjwwzx970814 -noprompt
+
+# keytool -importcert -alias MySQLCACert -file /home/ubuntu/rds-ca-2019-root.pem \
+#     -keystore truststore -storepass fjwwzx970814
