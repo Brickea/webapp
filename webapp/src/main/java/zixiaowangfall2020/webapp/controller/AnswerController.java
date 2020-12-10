@@ -113,7 +113,7 @@ public class AnswerController {
         LOG.info(msg);
         LOG.info(topicArn);
         LOG.info(user.getUserName());
-        amazonSNS.publish(new PublishRequest(topicArn,msg,user.getUserName()));
+//        amazonSNS.publish(new PublishRequest(topicArn,msg,user.getUserName()));
 
         return new ResponseEntity<Map<String, Object>>(res, HttpStatus.CREATED);
     }
