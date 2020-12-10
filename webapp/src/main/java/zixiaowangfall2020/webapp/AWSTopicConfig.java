@@ -24,7 +24,7 @@ public class AWSTopicConfig {
     private String region;
 
     @Bean
-    public AmazonSNS getAmazonS3Cient(){
+    public AmazonSNS getAmazonSNSCient(){
         return AmazonSNSClientBuilder
                 .standard()
                 .withRegion(region)
