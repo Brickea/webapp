@@ -163,6 +163,17 @@ public class AnswerController {
         long endTime = System.currentTimeMillis();
         MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL PUT /v1/question/{questionId}/answer/{answerId}",endTime-startTime);
 
+        Question question = questionService.getQuestionById(questionId);
+
+        String msg = "Dear "+currentUser.getLastName()+"\n"+
+                "Your question '"+question.getQuestionText()+" ' has been answered!\n"+
+                "Check this out: "+domainName+"/v1/question/"+questionId+"/answer/"+answer.getAnswerId()+" ";
+
+        LOG.info(msg);
+        LOG.info(topicArn);
+        LOG.info(currentUser.getUserName());
+        amazonSNS.publish(new PublishRequest(topicArn,msg,currentUser.getUserName()));
+
         return new ResponseEntity<Map<String, Object>>(res, HttpStatus.OK);
     }
 
@@ -203,6 +214,17 @@ public class AnswerController {
 
         long endTime = System.currentTimeMillis();
         MetricsConfig.statsd.recordExecutionTime("Time Cost API CALL DELETE /v1/question/{questionId}/answer/{answerId}",endTime-startTime);
+
+        Question question = questionService.getQuestionById(questionId);
+
+        String msg = "Dear "+currentUser.getLastName()+"\n"+
+                "Your question '"+question.getQuestionText()+" ' has been answered!\n"+
+                "Check this out: "+domainName+"/v1/question/"+questionId+"/answer/"+answer.getAnswerId()+" ";
+
+        LOG.info(msg);
+        LOG.info(topicArn);
+        LOG.info(currentUser.getUserName());
+        amazonSNS.publish(new PublishRequest(topicArn,msg,currentUser.getUserName()));
 
         return new ResponseEntity<Map<String, Object>>(res, HttpStatus.OK);
     }
