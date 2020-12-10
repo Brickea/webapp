@@ -3,6 +3,7 @@ package zixiaowangfall2020.webapp.controller;
 import com.amazonaws.services.appsync.model.LogConfig;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClient;
+import com.amazonaws.services.sns.model.PublishRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,9 @@ public class AnswerController {
     @Value("${webapp.domainname}")
     String domainName;
 
+    @Value("${aws.topic.arn}")
+    String topicArn;
+
     @PostMapping("/{questionId}/answer")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> answerQuestionByQuestionId(@PathVariable("questionId") String questionId, @RequestBody Map<String, Object> jsonObject) {
@@ -106,7 +110,7 @@ public class AnswerController {
                 "Your question '"+question.getQuestionText()+" ' has been answered!\n"+
                 "Check this out: "+domainName+"/v1/question/"+questionId+"/answer/"+answer.getAnswerId()+" ";
 
-        amazonSNS.publish(AWSTopicConfig.createCurrentTopicPublishRequest(msg,user.getUserName()));
+        amazonSNS.publish(new PublishRequest(topicArn,msg,user.getUserName()));
 
         return new ResponseEntity<Map<String, Object>>(res, HttpStatus.CREATED);
     }

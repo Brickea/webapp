@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 public class AWSTopicConfig {
 
     @Value("${aws.topic.arn}")
-    private static String topicArn;
+    private String topicArn;
 
     @Value("${aws.topic.region}")
     private String region;
@@ -31,10 +31,10 @@ public class AWSTopicConfig {
                 .build();
     }
 
-    public static PublishRequest createCurrentTopicPublishRequest(String msg,String email){
-
-        return new PublishRequest(topicArn,msg,email);
-    }
+//    public PublishRequest createCurrentTopicPublishRequest(String msg,String email){
+//
+//        return new PublishRequest(topicArn,msg,email);
+//    }
 
 
 }
