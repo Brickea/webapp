@@ -110,6 +110,9 @@ public class AnswerController {
                 "Your question '"+question.getQuestionText()+" ' has been answered!\n"+
                 "Check this out: "+domainName+"/v1/question/"+questionId+"/answer/"+answer.getAnswerId()+" ";
 
+        LOG.info(msg);
+        LOG.info(topicArn);
+        LOG.info(user.getUserName());
         amazonSNS.publish(new PublishRequest(topicArn,msg,user.getUserName()));
 
         return new ResponseEntity<Map<String, Object>>(res, HttpStatus.CREATED);
