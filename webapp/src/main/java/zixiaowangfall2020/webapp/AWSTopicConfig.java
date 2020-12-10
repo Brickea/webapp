@@ -17,9 +17,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AWSTopicConfig {
 
-    @Value("${aws.topic.arn}")
-    private String topicArn;
-
     @Value("${aws.topic.region}")
     private String region;
 
